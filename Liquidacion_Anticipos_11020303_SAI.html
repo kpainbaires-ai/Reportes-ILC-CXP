@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liquidación de Anticipos 11020303 SAI</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--ink:#1d2433;--mute:#667085;--line:#e3e6ec;--acc:#0f6b4f;--acc2:#e8f3ef;--warn:#b54708;--warn2:#fef3e7;--head:#eef1f5;}
+@media (prefers-color-scheme:dark){:root{--bg:#12151b;--card:#1b2029;--ink:#e6e9ef;--mute:#98a2b3;--line:#2c3340;--acc:#4fc79b;--acc2:#163328;--warn:#f5a95c;--warn2:#3a2614;--head:#232a35;}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 "Segoe UI",system-ui,Arial,sans-serif}
+.wrap{max-width:1500px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:20px;margin:0 0 4px}
+.sub{color:var(--mute);font-size:13px;margin-bottom:16px}
+.kpis{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px;min-width:170px}
+.kpi b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--mute);font-size:12px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
+.tab{border:1px solid var(--line);border-bottom:none;background:var(--head);color:var(--ink);padding:8px 16px;border-radius:8px 8px 0 0;cursor:pointer;font:inherit}
+.tab.on{background:var(--card);font-weight:600;color:var(--acc);position:relative;top:1px}
+.sheet{display:none;background:var(--card);border:1px solid var(--line);border-top:none;border-radius:0 0 8px 8px;padding:12px}
+.sheet.on{display:block}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.bar input{padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);min-width:240px;font:inherit}
+.btn{padding:6px 12px;border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:6px;cursor:pointer;font:inherit}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:1750px}
+th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top;white-space:nowrap}
+th{background:var(--head);font-size:12px;position:sticky;top:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+td.desc{white-space:normal;min-width:260px}
+tr.grp td{background:var(--acc2);font-weight:600}
+tr.tot td{font-weight:600;border-top:2px solid var(--ink)}
+tr.pend td.n.s{color:var(--warn);font-weight:600}
+.badge{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;background:var(--warn2);color:var(--warn);font-weight:600;margin-left:6px}
+.note{color:var(--mute);font-size:12px;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Liquidación de anticipos por concepto · Cuenta 11020303</h1>
+  <div class="sub">SERVICIOS AGROINDUSTRIALES, S.A. DE C.V. · Fecha registro 01/09/2026 – 30/09/2026 · Fuente: Movs. contabilidad BC190 · Corte de consulta 06/10/2026 · Montos en USD</div>
+  <div class="kpis" id="kpis"></div>
+  <div class="tabs">
+    <button class="tab on" data-s="pend">Pendiente</button>
+    <button class="tab" data-s="liq">Liquidado</button>
+  </div>
+  <div class="sheet on" id="pend"></div>
+  <div class="sheet" id="liq"></div>
+  <div class="note">
+    Criterio: se emparejan movimientos con descripción igual o similar e importe contrario (cargo vs. abono). Columnas sin información en origen se dejan vacías.
+    «Id. usuario» = usuario BC que registró el movimiento; «Cód./Nom. procedencia mov.» tal como están en Movs. contabilidad; «COMPRADOR» y «NOMBRE COMPRADOR» = relación de «Cód. dim. acceso directo 7» (Comprador Código) de Movs. contabilidad con el catálogo «Compradores Servicios Agroindustriales».<br>
+    Documento con datos personales: uso interno, sujeto a la Ley de Protección de Datos Personales (D.L. No. 144). No distribuir fuera de las áreas autorizadas.
+  </div>
+</div>
+<script>
+// [concepto, estado, movimientos[]] ; mov: [fecha, nDoc, nDocExt, refPago, desc, importe, nAsiento, idUsuario, codProcedencia, nomProcedencia, comprador, nombreComprador]
+const C=[
+ ["DEV. ANT. VIÁTICOS P/CAPACITACIÓN", "P", [["01/09/2026", "REM8893924275", "", "", "DEV.ANT.VIATICOS P/CAPACITACION", -200.0, "183035", "CABANA\\KEVIN.BAIRES", "ANTIC001", "", "ALFONSO", "ALFONSO ANTONIO QUIJADA AGUILERA"]]],
+ ["ANT. REPARACIÓN MOTOGUADAÑA HDA. CEIBA HINCADA", "P", [["14/09/2026", "FACCOMP-RE-0021977", "REC_12256", "", "ANT.REPAR.MOTOGUADAÑA HDA.CEIBA HINCADA", 100.0, "183192", "CABANA\\KEVIN.BAIRES", "RVENT001", "ROBERTO LEONEL VENTURA MORALES", "ROBERTO", "ROBERTO LEONEL VENTURA MORALES"]]],
+ ["ANT. ALQUILER VEHÍCULO JEFE AGRÍCOLA", "P", [["14/09/2026", "FACCOMP-RE-0021978", "REC_12257", "", "ANT.ALQUILER VEHICULO JEFE AGRICOLA", 600.0, "183193", "CABANA\\KEVIN.BAIRES", "RVENT001", "ROBERTO LEONEL VENTURA MORALES", "ROBERTO", "ROBERTO LEONEL VENTURA MORALES"]]],
+ ["ANT. MANTENIMIENTO VEHÍCULO MITSUBISHI", "P", [["14/09/2026", "FACCOMP-RE-0021979", "REC_12258", "", "ANT.MANTTO.DE VEHICULO MITSUBISHI", 800.0, "183194", "CABANA\\KEVIN.BAIRES", "RVENT001", "ROBERTO LEONEL VENTURA MORALES", "ROBERTO", "ROBERTO LEONEL VENTURA MORALES"]]],
+ ["ANT. COMPRA COMBUSTIBLE 13-18/7/2026", "P", [["17/09/2026", "FACCOMP-RE-0021991", "DTE-03-S004P001-000000000034240", "", "ANT.COMPRA DE COMBUSTIBLE 13-18/7/2026", -150.0, "183247", "CABANA\\KEVIN.BAIRES", "FPINE002", "FREDI ARQUIMIDES PINEDA IGLESIAS", "ROBERTO", "ROBERTO LEONEL VENTURA MORALES"]]],
+ ["ANT. REPARACIÓN VEHÍCULO MITSUBISHI 28/7/2026", "P", [["17/09/2026", "FACCOMP-RE-0021992", "24ZA000C000063", "", "ANT.REPARACION DE VEHÍCULO MITSUBISHI 28/7/2026", -1575.9, "183249", "CABANA\\KEVIN.BAIRES", "PROV-0000203", "JOSE ANTONIO RIVERA RIVERA", "ROBERTO", "ROBERTO LEONEL VENTURA MORALES"], ["17/09/2026", "REC_12130", "", "", "ANT.REPARACION DE VEHÍCULO MITSUBISHI 28/7/2026", -58.17, "183253", "CABANA\\KEVIN.BAIRES", "OJSTH001", "SUPER REPUESTOS EL SALVADOR, S.A. DE C.V.", "ROBERTO", "ROBERTO LEONEL VENTURA MORALES"], ["17/09/2026", "REM8998167758", "", "", "ANT.REPARACION DE VEHÍCULO MITSUBISHI 28/7/2026", -60.93, "183254", "CABANA\\KEVIN.BAIRES", "ANTIC001", "", "ROBERTO", "ROBERTO LEONEL VENTURA MORALES"]]],
+ ["ANT. COMPRA INYECTORES P/PICK UP MAZDA", "P", [["23/09/2026", "FACCOMP-RE-0022106", "DTE-03-S043P001-000000000045297", "", "ANT.COMPRA DE INYECTORES P/PICK UP MAZDA", -35.25, "183534", "CABANA\\KEVIN.BAIRES", "ALMAC001", "ALMACENES VIDRI, S.A. DE C.V.", "ELIU", "ELIU ISAI AYALA ALVARADO"], ["23/09/2026", "FACCOMP-RE-0022107", "DTE-03-M001P001-000000000000500", "", "ANT.COMPRA DE INYECTORES P/PICK UP MAZDA", -1009.54, "183536", "CABANA\\KEVIN.BAIRES", "MNAPO001", "MAURICIO NAPOLEON, S.A. DE C.V.", "ELIU", "ELIU ISAI AYALA ALVARADO"], ["23/09/2026", "FACCOMP-RE-0022108", "DTE-03-M001P001-000000000000018", "", "ANT.COMPRA DE INYECTORES P/PICK UP MAZDA", -36.0, "183538", "CABANA\\KEVIN.BAIRES", "DVILL001", "DAVID ANTONIO VILLALTA ANDRADE", "ELIU", "ELIU ISAI AYALA ALVARADO"], ["23/09/2026", "FACCOMP-RE-0022109", "DTE-03-S010P001-000000000050157", "", "ANT.COMPRA DE INYECTORES P/PICK UP MAZDA", -40.0, "183540", "CABANA\\KEVIN.BAIRES", "GRUPO017", "GRUPO NSV S.A. DE C.V.", "ELIU", "ELIU ISAI AYALA ALVARADO"], ["23/09/2026", "REM8818068499", "", "", "ANT.COMPRA DE INYECTORES P/PICK UP MAZDA", -665.0, "183541", "CABANA\\KEVIN.BAIRES", "ANTIC001", "", "ELIU", "ELIU ISAI AYALA ALVARADO"], ["23/09/2026", "REM9057355832", "", "", "ANT.COMPRA DE INYECTORES P/PICK UP MAZDA", -243.59, "183542", "CABANA\\KEVIN.BAIRES", "ANTIC001", "", "ELIU", "ELIU ISAI AYALA ALVARADO"], ["23/09/2026", "FACCOMP-RE-0022110", "REC_12292", "", "ANT.COMPRA DE INYECTORES P/PICK UP MAZDA", 29.38, "183543", "CABANA\\KEVIN.BAIRES", "PROV-0000208", "ELIU ISAI AYALA ALVARADO", "ELIU", "ELIU ISAI AYALA ALVARADO"]]],
+ ["PLANILLA AGRÍCOLA VIROL – PAGO 28/08/2026", "P", [["23/09/2026", "REM:100926", "", "", "PAGO PLANILLAS AGR 28/8/2026 VIROL", -728.95, "183561", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.VIROL", "PLANILLA AGRICOLA VIROL"]]],
+ ["PLANILLA AGRÍCOLA HDA. PRADERA – PAGO 28/08/2026", "P", [["23/09/2026", "REM:10092035", "", "", "PAGO PLANILLAS AGR 28/8/2026 HDA PRADERA", -533.85, "183560", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.PRADERA", "PLANILLA AGRICOLA HDA. PRADERA"]]],
+ ["PLANILLA AGRÍCOLA SAN LUIS TALPA – PAGO 28/08/2026", "P", [["23/09/2026", "REM:100901", "", "", "PAGO PLANILLAS AGR 28/8/2026 SAN LUIS TALPA", -276.0, "183558", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.SL.TALPA", "PLANILLA AGRICOLA SAN LUIS TALPA"]]],
+ ["PLANILLA AGRÍCOLA ZONA NORTE – PAGO 28/08/2026", "P", [["23/09/2026", "REM:10092034", "", "", "PAGO PLANILLAS AGR 28/8/2026 ZONA NORTE", -1.9, "183559", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.ILC ZNORTE", "PLANILLA AGRICOLA ILC ZONA NORTE"]]],
+ ["PLANILLA AGRÍCOLA VIROL – PAGO 11/09/2026", "L", [["11/09/2026", "PLAN.VIROL1926", "", "", "Pago de Planilla Agricola VIROL 11/9/2026", -6316.49, "183239", "CABANA\\BLANCA.CORTEZ", "", "", "PLAN.VIROL", "PLANILLA AGRICOLA VIROL"], ["24/09/2026", "NC.2026AGO09", "", "", "PAGO PLANILLAS AGR 11/09/2026 VIROL", 6830.5, "183562", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.VIROL", "PLANILLA AGRICOLA VIROL"], ["30/09/2026", "DR:25092039", "", "", "PAGO PLANILLAS AGR 11/09/2026 VIROL", -514.01, "184012", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.VIROL", "PLANILLA AGRICOLA VIROL"]]],
+ ["PLANILLA AGRÍCOLA HDA. PRADERA – PAGO 11/09/2026", "L", [["11/09/2026", "PLAN.PRADERA1926", "", "", "Pago de Planilla Agricola La Pradera 11/9/2026", -737.86, "183237", "CABANA\\BLANCA.CORTEZ", "", "", "PLAN.PRADERA", "PLANILLA AGRICOLA HDA. PRADERA"], ["24/09/2026", "NC.2026AGO12", "", "", "PAGO PLANILLAS AGR 11/09/2026 HDA PRADERA", 912.86, "183565", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.PRADERA", "PLANILLA AGRICOLA HDA. PRADERA"], ["30/09/2026", "DR:25092041", "", "", "PAGO PLANILLAS AGR 11/09/2026 HDA PRADERA", -175.0, "184014", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.PRADERA", "PLANILLA AGRICOLA HDA. PRADERA"]]],
+ ["PLANILLA AGRÍCOLA SAN LUIS TALPA – PAGO 11/09/2026", "L", [["11/09/2026", "PLAN.SL.TALPA1926", "", "", "Pago de Planilla Agricola SL.Talpa11/9/2026", -2303.18, "183238", "CABANA\\BLANCA.CORTEZ", "", "", "PLAN.SL.TALPA", "PLANILLA AGRICOLA SAN LUIS TALPA"], ["24/09/2026", "NC.2026AGO11", "", "", "PAGO PLANILLAS AGR 11/09/2026 SAN LUIS TALPA", 2354.08, "183564", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.SL.TALPA", "PLANILLA AGRICOLA SAN LUIS TALPA"], ["30/09/2026", "DR:25092040", "", "", "PAGO PLANILLAS AGR 11/09/2026 SAN LUIS TALPA", -50.9, "184013", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.SL.TALPA", "PLANILLA AGRICOLA SAN LUIS TALPA"]]],
+ ["PLANILLA AGRÍCOLA ZONA NORTE – PAGO 11/09/2026", "L", [["11/09/2026", "PLAN.ILC ZNORTE1926", "", "", "Pago de Planilla Agricola Zona Norte 11/9/2026", -1664.37, "183236", "CABANA\\BLANCA.CORTEZ", "", "", "PLAN.ILC ZNORTE", "PLANILLA AGRICOLA ILC ZONA NORTE"], ["24/09/2026", "NC.2026AGO10", "", "", "PAGO PLANILLAS AGR 11/09/2026 ZONA NORTE", 1957.76, "183563", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.ILC ZNORTE", "PLANILLA AGRICOLA ILC ZONA NORTE"], ["30/09/2026", "DR:25092038", "", "", "PAGO PLANILLAS AGR 11/09/2026 ZONA NORTE", -293.39, "184011", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.ILC ZNORTE", "PLANILLA AGRICOLA ILC ZONA NORTE"]]],
+ ["PLANILLA AGRÍCOLA VIROL – PAGO 25/09/2026", "P", [["29/09/2026", "PLAN.VIROL12589", "", "", "Pago de Planilla Agricola VIROL 25/9/2026", -3561.0, "183805", "CABANA\\BLANCA.CORTEZ", "", "", "PLAN.VIROL", "PLANILLA AGRICOLA VIROL"], ["30/09/2026", "NC.2026AGO16", "", "", "PAGO PLANILLAS AGR 25/09/2026 VIROL", 3803.25, "184018", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.VIROL", "PLANILLA AGRICOLA VIROL"]]],
+ ["PLANILLA AGRÍCOLA HDA. PRADERA – PAGO 25/09/2026", "P", [["29/09/2026", "PLAN.PRADERA12589", "", "", "Pago de Planilla Agricola La Pradera 25/9/2026", -797.75, "183803", "CABANA\\BLANCA.CORTEZ", "", "", "PLAN.PRADERA", "PLANILLA AGRICOLA HDA. PRADERA"], ["30/09/2026", "NC.2026AGO13", "", "", "PAGO PLANILLAS AGR 25/09/2026 HDA PRADERA", 1029.36, "184015", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.PRADERA", "PLANILLA AGRICOLA HDA. PRADERA"]]],
+ ["PLANILLA AGRÍCOLA SAN LUIS TALPA – PAGO 25/09/2026", "P", [["29/09/2026", "PLAN.SL.TALPA12589", "", "", "Pago de Planilla Agricola SL.Talpa 25/9/2026", -1203.3, "183804", "CABANA\\BLANCA.CORTEZ", "", "", "PLAN.SL.TALPA", "PLANILLA AGRICOLA SAN LUIS TALPA"], ["30/09/2026", "NC.2026AGO15", "", "", "PAGO PLANILLAS AGR 25/09/2026 SAN LUIS TALPA", 1329.08, "184017", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.SL.TALPA", "PLANILLA AGRICOLA SAN LUIS TALPA"]]],
+ ["PLANILLA AGRÍCOLA ZONA NORTE – PAGO 25/09/2026", "P", [["29/09/2026", "PLAN.ILC ZNORTE12589", "", "", "Pago de Planilla Agricola Zona Norte 25/9/2026", -1440.59, "183802", "CABANA\\BLANCA.CORTEZ", "", "", "PLAN.ILC ZNORTE", "PLANILLA AGRICOLA ILC ZONA NORTE"], ["30/09/2026", "NC.2026AGO14", "", "", "PAGO PLANILLAS AGR 25/09/2026 ZONA NORTE", 1711.76, "184016", "CABANA\\KEVIN.BAIRES", "BDAVI001", "BANCO DAVIVIENDA", "PLAN.ILC ZNORTE", "PLANILLA AGRICOLA ILC ZONA NORTE"]]],
+ ["COMISIONES BANCARIAS ESTRUCTURACIÓN DE CRÉDITOS (DAVIVIENDA)", "L", [["23/09/2026", "FACCOMP-RE-0022111", "DTE-03-M001P001-000000000156081", "", "COM POR SERV EN LA ESTRUCT DE CREDITOS REF: 704560800 0.25% F/PROC 10/09/2026", 125.0, "183544", "CABANA\\CARLOS.BENITO", "BBANC005", "BANCO DAVIVIENDA SALVADOREÑO, S.A.", "COMISIONES BANCARIAS", "COMISIONES BANCARIAS"], ["23/09/2026", "FACCOMP-RE-0022111", "DTE-03-M001P001-000000000156081", "", "COM POR SERV EN LA ESTRUCT DE CREDITOS REF: 704560800 0.25% F/PROC 10/09/2026", -125.0, "183545", "CABANA\\CARLOS.BENITO", "BBANC005", "BANCO DAVIVIENDA SALVADOREÑO, S.A.", "COMISIONES BANCARIAS", "COMISIONES BANCARIAS"], ["23/09/2026", "FACCOMP-RE-0022112", "DTE-03-M001P001-000000000159765", "", "COM POR SERV EN LA ESTRUCT DE CREDITOS REF: 704561123 0.25% F/PROC 17/09/2026", 25.0, "183546", "CABANA\\CARLOS.BENITO", "BBANC005", "BANCO DAVIVIENDA SALVADOREÑO, S.A.", "COMISIONES BANCARIAS", "COMISIONES BANCARIAS"], ["23/09/2026", "FACCOMP-RE-0022112", "DTE-03-M001P001-000000000159765", "", "COM POR SERV EN LA ESTRUCT DE CREDITOS REF: 704561123 0.25% F/PROC 17/09/2026", -25.0, "183547", "CABANA\\CARLOS.BENITO", "BBANC005", "BANCO DAVIVIENDA SALVADOREÑO, S.A.", "COMISIONES BANCARIAS", "COMISIONES BANCARIAS"], ["23/09/2026", "NCREDC-R-0000254", "NCREDC-DTE-000159765", "", "NCREDC-DTE-000159765", -25.0, "183548", "CABANA\\CARLOS.BENITO", "BBANC005", "BANCO DAVIVIENDA SALVADOREÑO, S.A.", "COMISIONES BANCARIAS", "COMISIONES BANCARIAS"], ["23/09/2026", "NCREDC-R-0000254", "NCREDC-DTE-000159765", "", "NCREDC-DTE-000159765", 25.0, "183549", "CABANA\\CARLOS.BENITO", "BBANC005", "BANCO DAVIVIENDA SALVADOREÑO, S.A.", "COMISIONES BANCARIAS", "COMISIONES BANCARIAS"], ["23/09/2026", "FACCOMP-RE-0022113", "DTE-03-M001P001-000000000159766", "", "COM POR SERV EN LA ESTRUCT DE CREDITOS REF: 704561123 0.25% F/PROC 17/09/2026", 25.0, "183550", "CABANA\\CARLOS.BENITO", "BBANC005", "BANCO DAVIVIENDA SALVADOREÑO, S.A.", "COMISIONES BANCARIAS", "COMISIONES BANCARIAS"], ["23/09/2026", "FACCOMP-RE-0022113", "DTE-03-M001P001-000000000159766", "", "COM POR SERV EN LA ESTRUCT DE CREDITOS REF: 704561123 0.25% F/PROC 17/09/2026", -25.0, "183551", "CABANA\\CARLOS.BENITO", "BBANC005", "BANCO DAVIVIENDA SALVADOREÑO, S.A.", "COMISIONES BANCARIAS", "COMISIONES BANCARIAS"], ["29/09/2026", "FACCOMP-RE-0022132", "DTE-03-M001P001-000000000162625", "", "COM POR SERV EN LA ESTRUCT DE CREDITOS REF: 704561522 0.25% F/PROC 24/09/2026", 75.0, "183800", "CABANA\\CARLOS.BENITO", "BBANC005", "BANCO DAVIVIENDA SALVADOREÑO, S.A.", "COMISIONES BANCARIAS", "COMISIONES BANCARIAS"], ["29/09/2026", "FACCOMP-RE-0022132", "DTE-03-M001P001-000000000162625", "", "COM POR SERV EN LA ESTRUCT DE CREDITOS REF: 704561522 0.25% F/PROC 24/09/2026", -75.0, "183801", "CABANA\\CARLOS.BENITO", "BBANC005", "BANCO DAVIVIENDA SALVADOREÑO, S.A.", "COMISIONES BANCARIAS", "COMISIONES BANCARIAS"]]],
+ ["SEGUROS AZUL – CUOTAS PÓLIZAS AUC 1/110 E IN 172/15", "L", [["30/09/2026", "FACCOMP-RE-0022138", "DTE-03-M001P001-202600000008605", "", "LIQ.CUOTA 4/6 POL. AUC - 1/110", 41.12, "183992", "CABANA\\CARLOS.BENITO", "PROGR002", "SEGUROS AZUL, S.A.", "ELIU", "ELIU ISAI AYALA ALVARADO"], ["30/09/2026", "FACCOMP-RE-0022138", "DTE-03-M001P001-202600000008605", "", "LIQ.CUOTA 4/6 POL. AUC - 1/110", -41.12, "183993", "CABANA\\CARLOS.BENITO", "PROGR002", "SEGUROS AZUL, S.A.", "ELIU", "ELIU ISAI AYALA ALVARADO"], ["30/09/2026", "FACCOMP-RE-0022139", "DTE-03-M001P001-202600000008606", "", "LIQ.CUOTA 5/6 POL. IN - 172/15", 214.63, "183994", "CABANA\\CARLOS.BENITO", "PROGR002", "SEGUROS AZUL, S.A.", "ELIU", "ELIU ISAI AYALA ALVARADO"], ["30/09/2026", "FACCOMP-RE-0022139", "DTE-03-M001P001-202600000008606", "", "LIQ.CUOTA 5/6 POL. IN - 172/15", -214.63, "183995", "CABANA\\CARLOS.BENITO", "PROGR002", "SEGUROS AZUL, S.A.", "ELIU", "ELIU ISAI AYALA ALVARADO"], ["30/09/2026", "FACCOMP-RE-0022142", "DTE-03-M001P001-202600000007543", "", "LIQ.IVA CUOTA 3/6 POL. AUC - 1/110", 41.12, "184004", "CABANA\\CARLOS.BENITO", "PROGR002", "SEGUROS AZUL, S.A.", "REGISTRO IVA", "REGISTRO DE IVA PENDIENTE"], ["30/09/2026", "FACCOMP-RE-0022142", "DTE-03-M001P001-202600000007543", "", "LIQ.IVA CUOTA 3/6 POL. AUC - 1/110", -41.12, "184005", "CABANA\\CARLOS.BENITO", "PROGR002", "SEGUROS AZUL, S.A.", "REGISTRO IVA", "REGISTRO DE IVA PENDIENTE"], ["30/09/2026", "FACCOMP-RE-0022143", "DTE-03-M001P001-202600000007539", "", "LIQ.IVA CUOTA 4/6 POL. IN - 172/15", 214.63, "184006", "CABANA\\CARLOS.BENITO", "PROGR002", "SEGUROS AZUL, S.A.", "REGISTRO IVA", "REGISTRO DE IVA PENDIENTE"], ["30/09/2026", "FACCOMP-RE-0022143", "DTE-03-M001P001-202600000007539", "", "LIQ.IVA CUOTA 4/6 POL. IN - 172/15", -214.63, "184007", "CABANA\\CARLOS.BENITO", "PROGR002", "SEGUROS AZUL, S.A.", "REGISTRO IVA", "REGISTRO DE IVA PENDIENTE"]]]
+];
+const H=["Fecha registro","Nº documento","Nº documento externo","Referencia pago","Descripción","Cargo","Abono","Saldo","Nº asiento","Id. usuario","Cód. procedencia mov.","Nom. Procedencia Mov.","COMPRADOR","NOMBRE COMPRADOR"];
+const r2=x=>Math.round(x*100)/100;
+const f=x=>x===""||x===null?"":r2(x).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const key=d=>{const[a,b,c]=d.split("/");return c+b+a};
+function build(st){
+  const out=[];let tc=0,ta=0;
+  C.filter(c=>c[1]===st).forEach(([con,_,m])=>{
+    const rows=[...m].sort((a,b)=>key(a[0]).localeCompare(key(b[0])));
+    let s=0,c1=0,a1=0;out.push({g:con});
+    rows.forEach(r=>{const imp=r[5];const cg=imp>0?imp:"",ab=imp<0?-imp:"";s=r2(s+imp);if(cg)c1+=cg;if(ab)a1+=ab;
+      out.push({v:[r[0],r[1],r[2],r[3],r[4],cg,ab,s,r[6],r[7],r[8],r[9],r[10],r[11]]});});
+    out.push({sub:[con,c1,a1,r2(c1-a1)]});tc+=c1;ta+=a1;
+  });
+  return {out,tc:r2(tc),ta:r2(ta)};
+}
+function render(id,st){
+  const {out,tc,ta}=build(st);
+  let h=`<div class="bar"><input placeholder="Filtrar (descripción, documento, comprador…)" oninput="flt('${id}',this.value)"><button class="btn" onclick="xlsx()">Descargar Excel (.xlsx)</button></div><div class="scroll"><table><thead><tr>${H.map((x,i)=>`<th class="${i>=5&&i<=7?'n':''}">${x}</th>`).join("")}</tr></thead><tbody>`;
+  out.forEach(o=>{
+    if(o.g)h+=`<tr class="grp" data-g="${esc(o.g)}"><td colspan="14">${esc(o.g)}${st==="P"?'<span class="badge">Pendiente</span>':''}</td></tr>`;
+    else if(o.sub)h+=`<tr class="grp sub" data-g="${esc(o.sub[0])}"><td colspan="5" style="text-align:right">Subtotal concepto</td><td class="n">${f(o.sub[1])}</td><td class="n">${f(o.sub[2])}</td><td class="n">${f(o.sub[3])}</td><td colspan="6"></td></tr>`;
+    else h+=`<tr class="det ${st==="P"?"pend":""}">${o.v.map((x,i)=>`<td class="${i>=5&&i<=7?'n':''}${i===7?' s':''}${i===4?'desc':''}">${i>=5&&i<=7?f(x):esc(x)}</td>`).join("")}</tr>`;
+  });
+  h+=`<tr class="tot"><td colspan="5" style="text-align:right">TOTAL ${st==="P"?"PENDIENTE":"LIQUIDADO"}</td><td class="n">${f(tc)}</td><td class="n">${f(ta)}</td><td class="n">${f(r2(tc-ta))}</td><td colspan="6"></td></tr></tbody></table></div>`;
+  document.getElementById(id).innerHTML=h;
+  return r2(tc-ta);
+}
+const sp=render("pend","P"),sl=render("liq","L");
+const nP=C.filter(c=>c[1]==="P").length,nL=C.filter(c=>c[1]==="L").length;
+document.getElementById("kpis").innerHTML=
+ `<div class="kpi"><span>Saldo neto cuenta</span><b>${f(sp+sl)}</b></div>`+
+ `<div class="kpi"><span>Conceptos pendientes</span><b>${nP}</b></div>`+
+ `<div class="kpi"><span>Saldo pendiente</span><b>${f(sp)}</b></div>`+
+ `<div class="kpi"><span>Conceptos liquidados</span><b>${nL}</b></div>`+
+ `<div class="kpi"><span>Movimientos analizados</span><b>${C.reduce((a,c)=>a+c[2].length,0)}</b></div>`;
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".tab,.sheet").forEach(e=>e.classList.remove("on"));
+  b.classList.add("on");document.getElementById(b.dataset.s).classList.add("on");});
+function flt(id,q){q=q.toLowerCase();const rows=[...document.querySelectorAll(`#${id} tbody tr`)];let g=null,any=false,grp=[];
+  const flush=()=>{grp.forEach(r=>r.style.display=(any||!q)?"":"none")};
+  rows.forEach(r=>{if(r.classList.contains("tot"))return;
+    if(r.classList.contains("grp")&&!r.classList.contains("sub")){flush();grp=[r];any=r.innerText.toLowerCase().includes(q);}
+    else{grp.push(r);if(r.innerText.toLowerCase().includes(q))any=true;}});flush();}
+/* ===== Exportación a Excel (.xlsx) nativa, sin librerías externas ===== */
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC[(c^u[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+function zip(files){const enc=new TextEncoder(),parts=[],cen=[];let off=0;
+  const w16=(a,v)=>a.push(v&255,(v>>>8)&255),w32=(a,v)=>a.push(v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255);
+  for(const [name,txt] of files){const nb=enc.encode(name),db=enc.encode(txt),c=crc32(db),h=[];
+    w32(h,0x04034b50);w16(h,20);w16(h,0x0800);w16(h,0);w16(h,0);w16(h,0x21);w32(h,c);w32(h,db.length);w32(h,db.length);w16(h,nb.length);w16(h,0);
+    parts.push(new Uint8Array(h),nb,db);
+    const e=[];w32(e,0x02014b50);w16(e,20);w16(e,20);w16(e,0x0800);w16(e,0);w16(e,0);w16(e,0x21);w32(e,c);w32(e,db.length);w32(e,db.length);w16(e,nb.length);w16(e,0);w16(e,0);w16(e,0);w16(e,0);w32(e,0);w32(e,off);
+    cen.push(new Uint8Array(e),nb);off+=h.length+nb.length+db.length;}
+  const cs=cen.reduce((a,x)=>a+x.length,0),end=[];w32(end,0x06054b50);w16(end,0);w16(end,0);w16(end,files.length);w16(end,files.length);w32(end,cs);w32(end,off);w16(end,0);
+  return new Blob([...parts,...cen,new Uint8Array(end)],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});}
+const X=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const CL=i=>String.fromCharCode(65+i);
+const serial=d=>{const[a,b,c]=d.split("/").map(Number);return (Date.UTC(c,b-1,a)-Date.UTC(1899,11,30))/86400000;};
+const STYLES=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<numFmts count="2"><numFmt numFmtId="164" formatCode="#,##0.00;[Red]-#,##0.00"/><numFmt numFmtId="165" formatCode="dd/mm/yyyy"/></numFmts>
+<fonts count="7"><font><sz val="10"/><name val="Segoe UI"/></font><font><b/><sz val="14"/><color rgb="FF1D2433"/><name val="Segoe UI"/></font><font><i/><sz val="9"/><color rgb="FF667085"/><name val="Segoe UI"/></font><font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Segoe UI"/></font><font><b/><sz val="10"/><color rgb="FF0F6B4F"/><name val="Segoe UI"/></font><font><b/><sz val="10"/><color rgb="FFB54708"/><name val="Segoe UI"/></font><font><b/><sz val="10"/><name val="Segoe UI"/></font></fonts>
+<fills count="6"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF0F6B4F"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFE8F3EF"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFEEF1F5"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFFEF3E7"/></patternFill></fill></fills>
+<borders count="3"><border/><border><left style="thin"><color rgb="FFD0D5DD"/></left><right style="thin"><color rgb="FFD0D5DD"/></right><top style="thin"><color rgb="FFD0D5DD"/></top><bottom style="thin"><color rgb="FFD0D5DD"/></bottom></border><border><left style="thin"><color rgb="FFD0D5DD"/></left><right style="thin"><color rgb="FFD0D5DD"/></right><top style="medium"><color rgb="FF1D2433"/></top><bottom style="medium"><color rgb="FF1D2433"/></bottom></border></borders>
+<cellStyleXfs count="1"><xf/></cellStyleXfs>
+<cellXfs count="18">
+<xf/>
+<xf fontId="1" applyFont="1"/>
+<xf fontId="2" applyFont="1"/>
+<xf fontId="3" fillId="2" borderId="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+<xf fontId="4" fillId="3" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>
+<xf borderId="1" applyBorder="1" applyAlignment="1"><alignment vertical="top"/></xf>
+<xf borderId="1" applyBorder="1" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf>
+<xf numFmtId="164" borderId="1" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment vertical="top"/></xf>
+<xf numFmtId="165" borderId="1" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="left" vertical="top"/></xf>
+<xf numFmtId="164" fontId="5" fillId="5" borderId="1" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment vertical="top"/></xf>
+<xf fontId="6" fillId="3" borderId="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right"/></xf>
+<xf numFmtId="164" fontId="6" fillId="3" borderId="1" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1"/>
+<xf fontId="6" fillId="4" borderId="2" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="right"/></xf>
+<xf numFmtId="164" fontId="6" fillId="4" borderId="2" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1"/>
+<xf fillId="3" borderId="1" applyFill="1" applyBorder="1"/>
+<xf fillId="4" borderId="2" applyFill="1" applyBorder="1"/>
+<xf fontId="2" applyFont="1" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf>
+<xf fontId="5" fillId="3" borderId="1" applyFont="1" applyFill="1" applyBorder="1"/>
+</cellXfs>
+<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
+</styleSheet>`;
+function sheetXml(st){
+  const {out,tc,ta}=build(st);const N=H.length,last=CL(N-1);const rows=[],merges=[];let r=0;
+  const cell=(c,v,sIdx,type)=>{const ref=CL(c)+r;if(v===""||v===null||v===undefined)return `<c r="${ref}" s="${sIdx}"/>`;
+    return type==="n"?`<c r="${ref}" s="${sIdx}"><v>${v}</v></c>`:`<c r="${ref}" s="${sIdx}" t="inlineStr"><is><t xml:space="preserve">${X(v)}</t></is></c>`;};
+  const row=(cells,ht)=>{rows.push(`<row r="${r}"${ht?` ht="${ht}" customHeight="1"`:""}>${cells.join("")}</row>`);};
+  r=1;row([cell(0,`Liquidación de anticipos por concepto · Cuenta 11020303 · ${st==="P"?"PENDIENTE":"LIQUIDADO"}`,1)],24);merges.push(`A1:${last}1`);
+  r=2;row([cell(0,"SERVICIOS AGROINDUSTRIALES, S.A. DE C.V. · Fecha registro 01/09/2026 – 30/09/2026 · Fuente: Movs. contabilidad BC190 · Corte 06/10/2026 · Montos en USD",2)]);merges.push(`A2:${last}2`);
+  r=4;row(H.map((h,i)=>cell(i,h,3)),30);
+  r=5;
+  out.forEach(o=>{
+    if(o.g){row([cell(0,o.g+(st==="P"?"   ▸ PENDIENTE":""),st==="P"?17:4),...Array.from({length:N-1},(_,i)=>cell(i+1,"",4))]);merges.push(`A${r}:${last}${r}`);}
+    else if(o.sub){row([cell(0,"Subtotal concepto",10),...[1,2,3,4].map(i=>cell(i,"",10)),cell(5,r2(o.sub[1]),11,"n"),cell(6,r2(o.sub[2]),11,"n"),cell(7,o.sub[3],11,"n"),...Array.from({length:N-8},(_,i)=>cell(i+8,"",14))]);merges.push(`A${r}:E${r}`);}
+    else{const v=o.v;row(v.map((x,i)=>{
+      if(i===0)return cell(i,serial(x),8,"n");
+      if(i>=5&&i<=7)return cell(i,x===""?"":r2(x),(i===7&&st==="P")?9:7,"n");
+      if(i===8&&x!=="")return cell(i,Number(x),5,"n");
+      return cell(i,x,i===4?6:5);}));}
+    r++;
+  });
+  row([cell(0,`TOTAL ${st==="P"?"PENDIENTE":"LIQUIDADO"}`,12),...[1,2,3,4].map(i=>cell(i,"",12)),cell(5,tc,13,"n"),cell(6,ta,13,"n"),cell(7,r2(tc-ta),13,"n"),...Array.from({length:N-8},(_,i)=>cell(i+8,"",15))]);merges.push(`A${r}:E${r}`);
+  r+=2;row([cell(0,"Criterio: se emparejan movimientos con descripción igual o similar e importe contrario. Columnas sin información en BC se dejan vacías. Documento de uso interno con datos personales, sujeto a la Ley de Protección de Datos Personales (D.L. No. 144).",16)],30);merges.push(`A${r}:${last}${r}`);
+  const W=[12,22,34,14,50,13,13,13,11,22,16,36,13,32];
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheetPr><tabColor rgb="${st==="P"?"FFB54708":"FF0F6B4F"}"/><pageSetUpPr fitToPage="1"/></sheetPr>
+<dimension ref="A1:${last}${r}"/>
+<sheetViews><sheetView workbookViewId="0" showGridLines="0"><pane ySplit="4" topLeftCell="A5" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>
+<sheetFormatPr defaultRowHeight="15"/>
+<cols>${W.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols>
+<sheetData>${rows.join("")}</sheetData>
+<mergeCells count="${merges.length}">${merges.map(m=>`<mergeCell ref="${m}"/>`).join("")}</mergeCells>
+<pageMargins left="0.3" right="0.3" top="0.5" bottom="0.5" header="0.3" footer="0.3"/>
+<pageSetup orientation="landscape" paperSize="1" fitToWidth="1" fitToHeight="0"/>
+</worksheet>`;}
+function xlsx(){
+  const files=[
+   ["[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/worksheets/sheet2.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`],
+   ["_rels/.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
+   ["xl/workbook.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Pendiente" sheetId="1" r:id="rId1"/><sheet name="Liquidado" sheetId="2" r:id="rId2"/></sheets><definedNames><definedName name="_xlnm.Print_Titles" localSheetId="0">Pendiente!$4:$4</definedName><definedName name="_xlnm.Print_Titles" localSheetId="1">Liquidado!$4:$4</definedName></definedNames></workbook>`],
+   ["xl/_rels/workbook.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`],
+   ["xl/styles.xml",STYLES],
+   ["xl/worksheets/sheet1.xml",sheetXml("P")],
+   ["xl/worksheets/sheet2.xml",sheetXml("L")]];
+  const a=document.createElement("a");a.href=URL.createObjectURL(zip(files));
+  a.download="Liquidacion_Anticipos_11020303_SAI.xlsx";document.body.appendChild(a);a.click();a.remove();}
+</script>
+</body>
+</html>
